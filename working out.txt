@@ -1,0 +1,89 @@
+What exactly is the business decision we're trying to make?
+Estimate the likelihood that an applicant will default/charge off, so LoanTap can decide whether to extend credit and under what risk-adjusted terms.
+
+At what point in the loan lifecycle should our prediction happen?
+the point immediately before the credit decision is made.
+
+What does Fully Paid represent from a credit-risk perspective?
+fully paid represents little to no risk.
+
+What does Charged Off represent?
+a high credit risk which needs a lot of attention, strict terms and conditions.
+
+Which should we consider the "bad" outcome?
+Identifing a defaulter as fullypaid dangerous for an underwriting business because LoanTap could approve a borrower who subsequently defaults.
+
+What would be more costly to the business:
+approving a borrower who eventually defaulter
+
+Based only on the data dictionary, which columns do you suspect might contain information that would not actually be available at underwriting time?
+term,int_rate,installment,grade,sub_grade,issue_d,loan_status.
+
+What do you think the phrase "if so, what should the repayment terms be" means in this dataset? Do we actually have enough information to answer that directly?
+The applicant is not suited to be approved a loan, but if we want ot approve there should be some terms and conditions that gaurentee us the repayment of loan or some way to collect atleast a majority part of the principal loan amount and no we actually dont have enough information to answer it directly.
+
+
+Applicant demographics / employment:loan_amnt, emp_title,emp_length,home_ownership,annual_inc,earliest_cr_line
+Financial capacity:annual_inc,installment,loan_amnt
+Existing credit history: open_acc,pub_rec,revol_bal,revol_util,total_acc,mort_acc,pub_rec_bankruptcies,earliest_cr_line.
+Loan/application characteristics:loan_amnt,grade,sub_grade,purpose,title
+Potential underwriting decisions / risk scores:dti,pub_rec,pub_rec_bankruptcies,mort_acc,revol_bal,open_acc,revol_util,total_acc
+Outcome / target:verification_status
+Administrative or identification information:term,int_rate,installment,issue_d
+You aren't sure:loan_amt
+
+OutLier Treatment:
+
+Instead of writing:
+
+"There are no erroneous values."
+
+Use:
+
+"No obvious erroneous/suspicious values were identified based on the checks performed."
+
+Why?
+
+Because we're doing observational data analysis, not auditing the database's source system.
+
+We can establish:
+
+internally consistent
+plausible
+suspicious
+impossible
+sentinel
+likely erroneous
+
+But rarely can we prove that a real-world value is 100% correct.
+
+
+
+Your findings, rewritten professionally
+
+If I were reviewing your case-study report, I'd suggest something close to this:
+
+loan_amnt
+
+loan_amnt ranges from 500 to 40,000 and is right-skewed, with a relatively small upper tail.
+ No obvious invalid values were identified. The maximum of 40,000 may represent a product-level lending limit and should not automatically be treated as an outlier.
+
+int_rate
+
+int_rate ranges from 5.32% to 30.99% and exhibits mild right skewness with statistical outliers under the selected criterion. 
+The observed range appears plausible for the product, and no obvious invalid values were identified.
+
+revol_bal
+
+revol_bal is highly right-skewed with a heavy upper tail. 
+Approximately 0.5% of observations have a revolving balance of zero. The extreme maximum (~1.74M) was investigated and appears plausible given the applicant's associated financial and employment characteristics. No internal inconsistency was identified.
+
+total_acc
+
+total_acc is right-skewed with a long upper tail. 
+Approximately 2.1% of observations are statistical outliers under the selected criterion. The maximum value of 151 was investigated and appears internally consistent with the applicant's other credit characteristics. No obvious erroneous values were identified.
+
+mort_acc
+
+mort_acc is a discrete count variable concentrated at low values and strongly right-skewed. 
+Approximately 35.3% of all observations have zero reported mortgage accounts, while approximately 9.5% are missing. Approximately 1.7% are statistical outliers under the selected criterion. No obvious invalid values were identified.

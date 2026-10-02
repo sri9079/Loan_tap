@@ -87,3 +87,17 @@ mort_acc
 
 mort_acc is a discrete count variable concentrated at low values and strongly right-skewed. 
 Approximately 35.3% of all observations have zero reported mortgage accounts, while approximately 9.5% are missing. Approximately 1.7% are statistical outliers under the selected criterion. No obvious invalid values were identified.
+
+We have established:
+
+The vast majority of installments agree with the standard EMI calculation.
+Tiny floating-point/rounding differences account for much of the raw discrepancy count.
+A small subset has genuinely material discrepancies.
+Those discrepancies are not randomly distributed with respect to term.
+The discrepancy rate is substantially higher for 60-month loans.
+The actual ratio analysis suggests the discrepancy isn't simply random noise.
+We don't have the underlying amount/process information necessary to definitively explain why the recorded installment differs.
+Therefore, don't alter the values based on this investigation.
+
+I'd record the data-quality finding and move on.
+

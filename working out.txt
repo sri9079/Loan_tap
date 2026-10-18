@@ -101,3 +101,18 @@ Therefore, don't alter the values based on this investigation.
 
 I'd record the data-quality finding and move on.
 
+You've investigated the important numerical issues quite thoroughly:
+
+annual_inc → extreme right tail, no obvious invalid values.
+dti → 9999 is a sentinel associated exactly with annual_inc = 0.
+open_acc → extreme values investigated; internally plausible.
+pub_rec → extreme values investigated; no obvious invalidity.
+revol_bal → extreme right tail; no obvious invalidity.
+total_acc → extreme tail; no obvious invalidity.
+mort_acc → discrete count; no obvious invalidity.
+revol_util → extreme value around 892% is suspicious/likely erroneous and needs treatment later.
+installment → small subset has material discrepancies; term association established, but cause cannot be established from available columns.
+pub_rec_bankruptcies → logical relationship with pub_rec is consistent.
+
+So I think we're ready to move from numerical-variable quality checks to the next Data Quality layer: categorical variables and their validity.
+

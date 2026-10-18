@@ -116,3 +116,12 @@ pub_rec_bankruptcies → logical relationship with pub_rec is consistent.
 
 So I think we're ready to move from numerical-variable quality checks to the next Data Quality layer: categorical variables and their validity.
 
+52.23% exact matches: After lowercasing, trimming whitespace, and replacing underscores in purpose with spaces, slightly more than half of the records have identical text in both fields.
+
+
+
+47.77% non-matches: The remaining records differ textually. They are not necessarily contradictory; some may express the same purpose using different wording.
+
+
+
+0.44% missing title: Missingness is relatively low. However, this alone does not establish whether the field was optional or why those entries are blank.

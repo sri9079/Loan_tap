@@ -125,3 +125,66 @@ So I think we're ready to move from numerical-variable quality checks to the nex
 
 
 0.44% missing title: Missingness is relatively low. However, this alone does not establish whether the field was optional or why those entries are blank.
+
+
+Field group	| Decision
+loan_status	| Target; define Charged Off as the positive class
+Applicant and credit attributes	| Candidate predictors, subject to availability at underwriting
+term, int_rate, installment	| Exclude from the confirmed pre-decision feature set based on the available dictionary
+grade, sub_grade	| Uncertain; retain for a separate diagnostic model comparison
+initial_list_status	| Uncertain; investigate meaning and timing before deciding
+issue_d	| Exclude as a direct pre-decision predictor; retain for potential temporal analysis
+Other unresolved fields|	Preserve until their eligibility is established
+
+This is a provisional feature inventory, not a modified dataset.
+
+
+
+Analytical Dataset Definition — LoanTap Case Study
+Reference example · Phase: Analytical Dataset Definition
+1. Objective and business context
+The objective is to build a binary classification model that predicts whether a loan will be fully repaid or charged off. The model is intended to support LoanTap's underwriting process by helping assess an applicant's creditworthiness.
+
+The analysis focuses on historical loan records and their observed repayment outcomes. Based on the available data dictionary, the working assumption is that the dataset represents originated loans; the available documentation does not explicitly confirm the complete application population.
+2. Unit of analysis and population
+The unit of analysis is one loan record. Each record contains borrower or loan-related attributes and a corresponding loan outcome.
+
+The dataset contains 396,030 records and 27 columns. The target has two observed outcomes: Fully Paid and Charged Off.
+
+Because the data appears to represent originated loans, the model will learn repayment patterns among loans that were historically originated. Its performance may not generalize directly to rejected applicants or applicants whose characteristics differ substantially from the historical borrower population.
+3. Target definition
+The target variable is loan_status.
+- Positive class — Charged Off: the adverse repayment outcome we want the model to identify.
+- Negative class — Fully Paid: the favorable repayment outcome.
+The model will estimate the likelihood of charge-off using eligible predictor variables. Evaluation will emphasize the model's ability to identify charged-off loans while also considering the consequences of incorrectly flagging loans that would be fully paid.
+4. Prediction point and feature eligibility
+The intended prediction point is immediately before the underwriting decision. Therefore, a predictor should represent information available to the lender at that point.
+
+Applicant and credit attributes such as annual_inc, dti, emp_length, and pub_rec are candidate predictors, subject to confirmation that their recorded values represent information available before the decision.
+
+The fields term, int_rate, and installment are excluded from the confirmed pre-decision feature set because the available data dictionary indicates that they are valid when a loan originates. Their presence in the historical records does not establish that these recorded values were available before underwriting.
+
+The fields issue_d and loan_status will not be used as ordinary predictors: issue_d represents the loan issuance date, while loan_status is the outcome being predicted.
+5. Fields requiring further investigation
+Three fields remain unresolved:
+Field	Reason for uncertainty	Planned approach
+grade	LoanTap-assigned category; exact meaning and assignment timing are undocumented	Preserve and evaluate separately; investigate potential leakage
+sub_grade	More granular LoanTap-assigned category; exact meaning and timing are undocumented	Compare with grade and assess incremental predictive contribution
+initial_list_status	Operational meaning and timing of assignment are unclear	Investigate documentation or provenance before deciding on eligibility
+
+These fields will remain in the original dataset. They will not automatically be included in the baseline model until their eligibility is established. Diagnostic comparisons may be used to examine their predictive contribution, but predictive performance alone will not justify their inclusion in a deployable model.
+6. Scope and limitations
+This project will focus on binary classification, feature analysis, model evaluation, and interpretation of predictive relationships.
+
+It will not attempt to calculate optimal loan amounts, interest rates, or repayment tenures. Those decisions require domain expertise and additional business rules beyond the current target.
+
+The analysis will also distinguish predictive importance from causal influence. A feature associated with charge-off is not necessarily a cause of charge-off.
+
+How to use this example
+You don't need to copy every sentence. A strong analytical dataset definition should answer five questions:
+1. What is one row? Define the unit of analysis.
+2. What are we predicting? Specify the target and positive class.
+3. At what point are we predicting it? This determines whether features are eligible.
+4. Which fields are included, excluded, or unresolved? Explain decisions using evidence.
+5. What are the limitations? State what the data cannot establish.
+The most important habit is to separate facts, assumptions, and decisions. For example, the observed target categories are facts; the interpretation that every record is an originated loan is a working assumption; excluding installment from the confirmed pre-decision feature set is a decision based on the available documentation.
